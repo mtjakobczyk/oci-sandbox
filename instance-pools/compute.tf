@@ -52,6 +52,6 @@ resource "oci_core_instance_pool" "instance_pool" {
       primary_subnet_id = "${oci_core_subnet.private_ad2_net.id}"
     }
   ]
-  size = "2"
+  size = "${var.instance_pool_target_size}"
   display_name = "instance-pool"
 }
