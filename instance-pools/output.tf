@@ -10,7 +10,7 @@ data "oci_core_instance_pool_instances" "instances" {
   instance_pool_id = "${oci_core_instance_pool.instance_pool.id}"
 }
 data "oci_core_instance" "instance" {
-  count = "2"
+  count = "${ var.outputPoolIPs ? var.instance_pool_target_size : 0 }"
   instance_id = "${lookup(data.oci_core_instance_pool_instances.instances.instances[count.index], "id")}"
 }
 output "Pooled instances private IPs" { value = [ "${data.oci_core_instance.instance.*.private_ip}" ] }
