@@ -8,4 +8,4 @@ variable "fingerprint" {}
 variable "private_key_password" {}
 variable "compartment_ocid" {}
 
-variable "instance_pool_target_size" { default = 4 }
+variable "instance_pool_target_size" { default = 2 }
