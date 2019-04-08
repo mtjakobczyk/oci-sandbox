@@ -30,7 +30,6 @@ module "workers" {
   ads = "${local.ads}"
   image_ocid = "${local.image_ocid}"
 }
-
 ### ADs and Compute Image evaluation
 locals {
   ads = [
@@ -51,4 +50,4 @@ data "oci_core_images" "compute_image" {
 
 output "Image name " { value = "${data.oci_core_images.compute_image.images.0.display_name}" }
 output "Bastion public IP" { value = "${module.bastion.bastion_public_ip}" }
-output "Workers private IPs" { value = "${module.workers.worker_private_ips}" }
+# output "Workers private IPs" { value = "${module.workers.worker_private_ips}" }
