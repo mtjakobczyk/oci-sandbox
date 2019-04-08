@@ -1,0 +1,21 @@
+#cloud-config
+yum_repos:
+    docker-ce-stable:
+        baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+        enabled: true
+        gpgcheck: true
+        gpgkey: https://download.docker.com/linux/centos/gpg
+        name: Docker CE Stable - $basearch
+package_upgrade: true
+packages:
+  - yum-utils
+  - device-mapper-persistent-data
+  - lvm2
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+runcmd:
+ -  groupadd docker
+ -  usermod -aG docker opc
+ -  systemctl enable docker
+ -  systemctl start docker
