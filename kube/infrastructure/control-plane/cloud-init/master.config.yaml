@@ -1,11 +1,18 @@
 #cloud-config
 yum_repos:
     docker-ce-stable:
+        gpgkey: https://download.docker.com/linux/centos/gpg
+        name: Docker CE Stable - $basearch
         baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
         enabled: true
         gpgcheck: true
-        gpgkey: https://download.docker.com/linux/centos/gpg
-        name: Docker CE Stable - $basearch
+    kubernetes:
+        name: Kubernetes
+        baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+        enabled: true
+        gpgcheck: true
+        gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+        exclude: kube*
 package_upgrade: true
 packages:
   - yum-utils
@@ -14,8 +21,22 @@ packages:
   - docker-ce
   - docker-ce-cli
   - containerd.io
+write_files:
+ -  content: |
+      net.bridge.bridge-nf-call-ip6tables = 1
+      net.bridge.bridge-nf-call-iptables = 1
+    path: /etc/sysctl.d/k8s.conf
 runcmd:
- -  groupadd docker
- -  usermod -aG docker opc
- -  systemctl enable docker
- -  systemctl start docker
+ -  [ groupadd, docker ]
+ -  [ usermod, -aG, docker, opc ]
+ -  [ systemctl, enable, docker ]
+ -  [ systemctl, start, docker ]
+ -  [ sed, -i, 's/^SELINUX=.*/SELINUX=permissive/g', "/etc/selinux/config" ]
+ -  [ setenforce, 0 ]
+ -  [ sed, -i, '/ swap / s/^/#/', "/etc/fstab" ]
+ -  [ swapoff, -a ]
+ -  [ firewall-offline-cmd, "--add-port=6443/tcp" ]
+ -  [ firewall-offline-cmd, "--add-port=2379-2380/tcp" ]
+ -  [ firewall-offline-cmd, "--add-port=10250-10252/tcp" ]
+ -  [ systemctl, restart, firewalld ]
+ -  [ sysctl, --system ]
