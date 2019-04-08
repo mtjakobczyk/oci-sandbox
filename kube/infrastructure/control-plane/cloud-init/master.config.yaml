@@ -40,3 +40,4 @@ runcmd:
  -  [ firewall-offline-cmd, "--add-port=10250-10252/tcp" ]
  -  [ systemctl, restart, firewalld ]
  -  [ sysctl, --system ]
+ -  [ yum, install, -y, kubelet, kubeadm, kubectl, "--disableexcludes=kubernetes" ]
