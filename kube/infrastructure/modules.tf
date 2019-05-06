@@ -10,6 +10,7 @@ module "bastion" {
   ads = "${local.ads}"
   image_ocid = "${local.image_ocid}"
 }
+
 module "control-plane" {
   source = "control-plane"
   compartment_ocid = "${var.compartment_ocid}"
@@ -20,6 +21,7 @@ module "control-plane" {
   ads = "${local.ads}"
   image_ocid = "${local.image_ocid}"
 }
+/*
 module "workers" {
   source = "workers"
   compartment_ocid = "${var.compartment_ocid}"
@@ -30,6 +32,7 @@ module "workers" {
   ads = "${local.ads}"
   image_ocid = "${local.image_ocid}"
 }
+*/
 ### ADs and Compute Image evaluation
 locals {
   ads = [
@@ -44,8 +47,8 @@ data "oci_identity_availability_domains" "ads" {
 }
 data "oci_core_images" "compute_image" {
   compartment_id = "${var.tenancy_ocid}"
-  operating_system = "CentOS"
-  operating_system_version = 7
+  operating_system = "Canonical Ubuntu"
+  operating_system_version = "18.04"
 }
 
 output "Image name " { value = "${data.oci_core_images.compute_image.images.0.display_name}" }
